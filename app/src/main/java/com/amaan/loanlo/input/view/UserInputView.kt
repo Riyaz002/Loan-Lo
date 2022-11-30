@@ -1,17 +1,29 @@
 package com.amaan.loanlo.input.view
 
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.TextView
+import com.amaan.loanlo.R
 import com.amaan.loanlo.databinding.FragmentUserInputBinding
+import com.amaan.loanlo.eligibility.EligibilityFragment
 import com.amaan.loanlo.input.FieldTypes
+import com.amaan.loanlo.input.UserInputFragment
 import com.amaan.loanlo.main.MainActivity
+import com.google.android.material.slider.Slider
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import java.util.*
+import kotlin.math.roundToInt
 
 class UserInputView(view: View) {
     val binding = FragmentUserInputBinding.bind(view)
+    lateinit var fragmentCallback: UserInputFragment.FragmentCallback
     var fieldType: FieldTypes? = null
     var timer: Timer? = null
 
@@ -38,7 +50,6 @@ class UserInputView(view: View) {
                         },
                         1000
                     )
-                    validate(it)
                 }
             }
 
@@ -57,8 +68,25 @@ class UserInputView(view: View) {
             validateAll()
             if (allFieldsAreValid()) {
                 calculateLoan()
+            } else {
+                showSnackBar("All fields must be valid" ,view)
             }
         }
+    }
+
+    private fun showSnackBar(text: String ,view: View) {
+        val snackbar = Snackbar.make(view, text, Snackbar.LENGTH_LONG)
+            .setTextColor(Color.parseColor("#CF0000"))
+            .setBackgroundTint(Color.parseColor("#FFFFFF"))
+
+        val lp = FrameLayout.LayoutParams(
+            snackbar.view.layoutParams.width,
+            snackbar.view.layoutParams.height
+        )
+        lp.gravity = Gravity.TOP
+        lp.setMargins(16, 16, 16, 0)
+        snackbar.view.layoutParams = lp
+        snackbar.show()
     }
 
     private fun validateAll() {
@@ -71,31 +99,37 @@ class UserInputView(view: View) {
     }
 
     private fun calculateLoan() {
-
+        //TODO: need to pass variables
+        val p = binding.amount.text?.trim().toString().toInt()
+        val r = binding.interest.text?.trim().toString().toInt()
+        val t = binding.tenure.text?.trim().toString().toInt()*12
+        val loan = p * r * Math.pow((1+r).toDouble(),t.toDouble()) / (Math.pow((1+r).toDouble(),t.toDouble())-1)
+        showSnackBar("Loan is $loan", binding.root)
+        val bundle = Bundle()
+        bundle.putInt("amount", p)
+        bundle.putInt("interest", r)
+        bundle.putInt("tenure", t)
+        bundle.putInt("loan", loan.toInt())
+        val fragment = EligibilityFragment()
+        fragment.arguments = bundle
+        fragmentCallback.getFragmentManager().beginTransaction().replace(
+            R.id.fragment, fragment
+        ).addToBackStack("eligibility").commit()
     }
 
     private fun allFieldsAreValid(): Boolean {
         var isValid = true
-        if (!getFieldObjects(FieldTypes.AGE).first.text.isNullOrEmpty()
-            || getFieldObjects(FieldTypes.AGE).second.error != null ||
-            !getFieldObjects(FieldTypes.GROSS_INCOME).first.text.isNullOrEmpty()
-            || getFieldObjects(FieldTypes.GROSS_INCOME).second.error != null ||
-            !getFieldObjects(FieldTypes.INTEREST_RATE).first.text.isNullOrEmpty()
-            || getFieldObjects(FieldTypes.INTEREST_RATE).second.error != null ||
-            !getFieldObjects(FieldTypes.LOAN_AMOUNT).first.text.isNullOrEmpty()
-            || getFieldObjects(FieldTypes.INTEREST_RATE).second.error != null ||
-            !getFieldObjects(FieldTypes.CREDIT_SCORE).first.text.isNullOrEmpty()
-            || getFieldObjects(FieldTypes.CREDIT_SCORE).second.error != null ||
-            !getFieldObjects(FieldTypes.TENURE).first.text.isNullOrEmpty()
-            || getFieldObjects(FieldTypes.TENURE).second.error != null
-        ) {
-            isValid = false
-        }
+        if(getFieldObjects(FieldTypes.AGE).first.text.isNullOrEmpty() || getFieldObjects(FieldTypes.AGE).second.text.isNotEmpty()) isValid = false
+        if(getFieldObjects(FieldTypes.CREDIT_SCORE).first.text.isNullOrEmpty() || getFieldObjects(FieldTypes.CREDIT_SCORE).second.text.isNotEmpty()) isValid = false
+        if(getFieldObjects(FieldTypes.GROSS_INCOME).first.text.isNullOrEmpty() || getFieldObjects(FieldTypes.GROSS_INCOME).second.text.isNotEmpty()) isValid = false
+        if(getFieldObjects(FieldTypes.INTEREST_RATE).first.text.isNullOrEmpty() || getFieldObjects(FieldTypes.INTEREST_RATE).second.text.isNotEmpty()) isValid = false
+        if(getFieldObjects(FieldTypes.LOAN_AMOUNT).first.text.isNullOrEmpty() || getFieldObjects(FieldTypes.LOAN_AMOUNT).second.text.isNotEmpty()) isValid = false
+        if(getFieldObjects(FieldTypes.TENURE).first.text.isNullOrEmpty() || getFieldObjects(FieldTypes.TENURE).second.text.isNotEmpty()) isValid = false
         return isValid
     }
 
     private fun initializeInputField(selectedField: FieldTypes, textWatcher: TextWatcher) {
-        val (et, _) = getFieldObjects(selectedField)
+        val (et, _, slider) = getFieldObjects(selectedField)
         et.hint = selectedField.id
         et.addTextChangedListener(textWatcher)
         et.setOnFocusChangeListener { view, b ->
@@ -104,6 +138,24 @@ class UserInputView(view: View) {
                 null
             } else selectedField
         }
+        slider.addOnChangeListener { slider, value, fromUser ->
+            et.setText(value.roundToInt().toString())
+            et.setSelection(et.text?.length?:0)
+
+            try{
+                timer?.cancel()
+                timer = Timer()
+                timer?.schedule(
+                    object: TimerTask(){
+                        override fun run() {
+                            validate(selectedField)
+                        }
+                    }, 1000
+                )
+            } catch (e: Exception){
+
+            }
+        }
     }
 
     private fun clearError(selectedField: FieldTypes) {
@@ -111,41 +163,59 @@ class UserInputView(view: View) {
     }
 
     fun validate(selectedField: FieldTypes) {
-        val (et,htv) = getFieldObjects(selectedField)
+        val (et,htv, slider) = getFieldObjects(selectedField)
         if (et.text?.trim().isNullOrEmpty()) {
             htv.text = "field is required"
         }
         try {
             when (selectedField) {
                 FieldTypes.AGE -> {
-                    if (et.text.toString().toInt() !in 18..60) {
+                    if (et.text.toString().toInt() !in 21..60) {
                         htv.text = "invalid age"
-                    } else clearError(selectedField)
+                    } else {
+                        slider.value = et.text.toString().toFloat()
+                        clearError(selectedField)
+                    }
                 }
                 FieldTypes.GROSS_INCOME -> {
-                    if (et.text.toString().toInt() < 0) {
-                        htv.text = "gross income cannot be negative"
-                    } else clearError(selectedField)
+                    if (et.text.toString().toInt() !in 25000..1000000) {
+                        htv.text = "gross income should at least be 25000"
+                    } else {
+                        slider.value = et.text.toString().toFloat()
+                        clearError(selectedField)
+                    }
                 }
                 FieldTypes.LOAN_AMOUNT -> {
-                    if (et.text.toString().toInt() < 10000) {
-                        htv.text = "Loan amount cannot less than 10000"
-                    } else clearError(selectedField)
+                    if (et.text.toString().toInt() !in 1000..1000000) {
+                        htv.text = "loan amount cannot be less than 1000"
+                    } else {
+                        slider.value = et.text.toString().toFloat()
+                        clearError(selectedField)
+                    }
                 }
                 FieldTypes.INTEREST_RATE -> {
-                    if (et.text.toString().toInt() < 10000) {
+                    if (et.text.toString().toInt() !in 5..50) {
                         htv.text = "interest rate cannot be negative"
-                    } else clearError(selectedField)
+                    } else {
+                        slider.value = et.text.toString().toFloat()
+                        clearError(selectedField)
+                    }
                 }
                 FieldTypes.CREDIT_SCORE -> {
-                    if (et.text.toString().toInt() < 0) {
-                        htv.text = "credit score cannot be negative"
-                    } else clearError(selectedField)
+                    if (et.text.toString().toInt() !in 750..1000) {
+                        htv.text = "credit score must be greater than or equal to 750"
+                    } else {
+                        slider.value = et.text.toString().toFloat()
+                        clearError(selectedField)
+                    }
                 }
                 FieldTypes.TENURE -> {
-                    if (et.text.toString().toInt() < 0) {
-                        htv.text = "tenure cannot be negative"
-                    } else clearError(selectedField)
+                    if (et.text.toString().toInt() !in 1..15) {
+                        htv.text = "tenure should be between 1 to 15"
+                    } else {
+                        slider.value = et.text.toString().toFloat()
+                        clearError(selectedField)
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -155,14 +225,15 @@ class UserInputView(view: View) {
         }
     }
 
-    private fun getFieldObjects(selectedField: FieldTypes): Pair<TextInputEditText, TextView> {
+    private fun getFieldObjects(selectedField: FieldTypes): Triple<TextInputEditText, TextView, Slider> {
         return when (selectedField) {
-            FieldTypes.AGE -> Pair(binding.age, binding.ageHint)
-            FieldTypes.GROSS_INCOME -> Pair(binding.gIncome, binding.gIncomeHint)
-            FieldTypes.LOAN_AMOUNT -> Pair(binding.amount, binding.amountHint)
-            FieldTypes.CREDIT_SCORE -> Pair(binding.cScore, binding.cScoreHint)
-            FieldTypes.INTEREST_RATE -> Pair(binding.interest, binding.interestHint)
-            FieldTypes.TENURE -> Pair(binding.tenure, binding.tenureHint)
+            FieldTypes.AGE -> Triple(binding.age, binding.ageHint, binding.ageSlider)
+            FieldTypes.GROSS_INCOME -> Triple(binding.gIncome, binding.gIncomeHint, binding.gSlider )
+            FieldTypes.LOAN_AMOUNT -> Triple(binding.amount, binding.amountHint, binding.amountSlider)
+            FieldTypes.CREDIT_SCORE -> Triple(binding.cScore, binding.cScoreHint, binding.cSlider)
+            FieldTypes.INTEREST_RATE -> Triple(binding.interest, binding.interestHint, binding.interestSlider)
+            FieldTypes.TENURE -> Triple(binding.tenure, binding.tenureHint, binding.tenureSlider)
         }
     }
+
 }
