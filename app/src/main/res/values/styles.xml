@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="MyET" parent="ThemeOverlay.Material3.TextInputEditText">
         <item name="boxStrokeWidth">1dp</item>
         <item name="boxStrokeColor">#555555</item>
@@ -7,5 +8,10 @@
         <item name="boxCornerRadiusTopEnd">0dp</item>
         <item name="boxCornerRadiusBottomStart">0dp</item>
         <item name="boxCornerRadiusBottomEnd">0dp</item>
+    </style>
+
+    <style name="Widget.Theme.LoanLo.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
 </resources>

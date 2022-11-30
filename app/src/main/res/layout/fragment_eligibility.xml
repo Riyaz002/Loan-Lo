@@ -12,137 +12,166 @@
         android:layout_height="match_parent"
         tools:context=".eligibility.EligibilityFragment">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/tv_static"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:fontFamily="@font/yrsa_medium"
-                android:text="Break Up of Total Payment"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/pieChart_view"
-                android:layout_width="300dp"
-                android:layout_height="300dp"
-                android:layout_margin="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_static" />
-
-            <androidx.cardview.widget.CardView
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_margin="16dp"
-                android:backgroundTint="@color/primaryLightColor"
-                app:cardCornerRadius="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pieChart_view">
+                android:layout_height="match_parent">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <TextView
+                    android:id="@+id/tv_static"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:fontFamily="@font/yrsa_medium"
+                    android:text="Break Up of Total Payment"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChart_view"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:layout_margin="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_static" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="200dp"
+                    android:layout_margin="16dp"
+                    android:backgroundTint="@color/primaryLightColor"
+                    app:cardCornerRadius="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/pieChart_view">
 
-                    <TextView
-                        android:id="@+id/tv_static2"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:fontFamily="@font/yrsa_medium"
-                        android:gravity="center_horizontal"
-                        android:text="Loan EMI"
-                        android:textSize="18sp"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:layout_height="match_parent">
 
-                    <TextView
-                        android:id="@+id/tv_emi_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:fontFamily="@font/yrsa_medium"
-                        android:gravity="center_horizontal"
-                        android:textSize="18sp"
-                        app:layout_constraintTop_toBottomOf="@id/tv_static2" />
+                        <TextView
+                            android:id="@+id/tv_static2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:fontFamily="@font/yrsa_medium"
+                            android:gravity="center_horizontal"
+                            android:text="Loan EMI"
+                            android:textSize="18sp"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                    <View
-                        android:id="@+id/divider"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_margin="16dp"
-                        android:background="@color/black"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_emi_amount" />
+                        <TextView
+                            android:id="@+id/tv_emi_amount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:fontFamily="@font/yrsa_medium"
+                            android:gravity="center_horizontal"
+                            android:textSize="18sp"
+                            app:layout_constraintTop_toBottomOf="@id/tv_static2" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/divider">
+                        <View
+                            android:id="@+id/divider"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_margin="16dp"
+                            android:background="@color/black"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_emi_amount" />
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:layout_marginTop="16dp"
+                            android:orientation="horizontal"
+                            android:weightSum="2"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/divider">
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:paddingStart="16dp"
-                                android:drawablePadding="5dp"
-                                android:drawableStart="@drawable/ic_circle"
-                                android:text="11,23,109" />
+                                android:layout_weight="1"
+                                android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/tv_static3"
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:drawableStart="@drawable/ic_circle"
+                                    android:drawablePadding="5dp"
+                                    android:paddingStart="16dp"
+                                    android:text="11,23,109" />
+
+                                <TextView
+                                    android:id="@+id/tv_static3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:paddingStart="16dp"
+                                    android:text="Total Interest Payable" />
+                            </LinearLayout>
+
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:paddingStart="16dp"
-                                android:text="Total Interest Payable" />
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="end"
+                                    android:drawableEnd="@drawable/ic_circle"
+                                    android:drawablePadding="5dp"
+                                    android:paddingEnd="16dp"
+                                    android:text="11,23,109" />
+
+                                <TextView
+                                    android:id="@+id/tv_static4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="end"
+                                    android:layout_marginTop="8dp"
+                                    android:paddingEnd="16dp"
+                                    android:text="Total Payment" />
+                            </LinearLayout>
                         </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_static5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:fontFamily="@font/raleway_extrabold"
+                    android:text="Suggested Loans"
+                    android:textSize="26sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/card" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="end"
-                                android:paddingEnd="16dp"
-                                android:drawablePadding="5dp"
-                                android:drawableEnd="@drawable/ic_circle"
-                                android:text="11,23,109" />
-
-                            <TextView
-                                android:id="@+id/tv_static4"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="end"
-                                android:paddingEnd="16dp"
-                                android:layout_marginTop="8dp"
-                                android:text="Total Payment" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_suggestion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/tv_static5"
+                    tools:listitem="@layout/suggested_loan_item" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/webview_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
     </FrameLayout>
 </layout>

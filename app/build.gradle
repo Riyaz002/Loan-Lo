@@ -32,6 +32,9 @@ android {
     dataBinding{
         enabled = true
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 
@@ -50,4 +53,7 @@ dependencies {
 
     //pie chart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+
+    //fast adapter by Mike Penz
+    implementation "com.mikepenz:fastadapter:5.7.0"
 }

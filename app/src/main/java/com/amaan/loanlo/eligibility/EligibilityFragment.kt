@@ -22,7 +22,7 @@ class EligibilityFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_eligibility, container, false)
-        EligibilityView(view, arguments)
+        EligibilityView(view, arguments, parentFragmentManager)
         return view
     }
 

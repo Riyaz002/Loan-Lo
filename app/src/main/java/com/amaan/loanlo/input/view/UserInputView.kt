@@ -99,16 +99,14 @@ class UserInputView(view: View) {
     }
 
     private fun calculateLoan() {
-        //TODO: need to pass variables
-        val p = binding.amount.text?.trim().toString().toInt()
-        val r = binding.interest.text?.trim().toString().toInt()
-        val t = binding.tenure.text?.trim().toString().toInt()*12
-        val loan = p * r * Math.pow((1+r).toDouble(),t.toDouble()) / (Math.pow((1+r).toDouble(),t.toDouble())-1)
-        showSnackBar("Loan is $loan", binding.root)
+        val p = binding.amount.text?.trim().toString().toDouble()
+        val t = binding.tenure.text?.trim().toString().toDouble()*12
+        val r = binding.interest.text?.trim().toString().toDouble()/(t*10)
+        val loan = (p*r*(1+r)*t)/(t*(1 + r)-1)
         val bundle = Bundle()
-        bundle.putInt("amount", p)
-        bundle.putInt("interest", r)
-        bundle.putInt("tenure", t)
+        bundle.putInt("amount", p.toInt())
+        bundle.putInt("interest", binding.interest.text?.trim().toString().toDouble().toInt())
+        bundle.putInt("tenure", t.toInt())
         bundle.putInt("loan", loan.toInt())
         val fragment = EligibilityFragment()
         fragment.arguments = bundle
