@@ -73,8 +73,8 @@
                             android:layout_marginTop="16dp"
                             android:fontFamily="@font/yrsa_medium"
                             android:gravity="center_horizontal"
-                            android:textSize="18sp"
-                            app:layout_constraintTop_toBottomOf="@id/tv_static2" />
+                            app:layout_constraintTop_toBottomOf="@id/tv_static2"
+                            android:textSize="18sp" />
 
                         <View
                             android:id="@+id/divider"
